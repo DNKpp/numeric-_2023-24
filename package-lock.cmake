@@ -53,3 +53,12 @@ CPMDeclarePackage(
 	GITHUB_REPOSITORY xtensor-stack/xsimd
 	EXCLUDE_FROM_ALL YES
 )
+
+CPMDeclarePackage(
+	catch2
+	NAME catch2
+	GIT_TAG v3.5.2
+	GITHUB_REPOSITORY catchorg/Catch2
+	EXCLUDE_FROM_ALL YES
+)
+
