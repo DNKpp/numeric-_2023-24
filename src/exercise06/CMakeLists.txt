@@ -16,3 +16,9 @@ target_link_libraries(
 	blaze::blaze
 	range-v3::range-v3
 )
+
+target_include_directories(
+	exercise06
+	PRIVATE
+	"../include"
+)

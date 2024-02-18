@@ -4,6 +4,21 @@
 
 #include "Linvb.hpp"
 
+namespace
+{
+	const Matrix A1{
+		{1, 0, 0},
+		{1, 2, 0,},
+		{2, 3, 4}
+	};
+
+	const Matrix A2{
+		{1, 0, 0},
+		{1, 1, 0,},
+		{2, 3, 1}
+	};
+}
+
 TEST_CASE("6.b) Linvb functions solve the LGS by forward-insertion", "[linvb]")
 {
 	const auto fun = GENERATE(
@@ -13,7 +28,7 @@ TEST_CASE("6.b) Linvb functions solve the LGS by forward-insertion", "[linvb]")
 		&linvb2_vec
 	);
 
-	const auto [expectation, L, z] = GENERATE(
+	const auto [expectation, L, z] = GENERATE_REF(
 		(table<ColumnVector, Matrix, ColumnVector>)({
 			{
 			{42., 1337.},
@@ -27,18 +42,23 @@ TEST_CASE("6.b) Linvb functions solve the LGS by forward-insertion", "[linvb]")
 			},
 			{
 			{1, 0.5, -.125},
-			{{1, 0, 0},{1,2, 0,},{2, 3, 4}},
+			A1,
+			{1, 2, 3}
+			},
+			{
+			{1, 1, -2},
+			A2,
 			{1, 2, 3}
 			}
 			}));
 
-	REQUIRE(expectation == std::invoke(fun, blaze::LowerMatrix<Matrix>{L}, z));
+	REQUIRE(expectation == std::invoke(fun, L, z));
 }
 
 TEST_CASE("6 c) plot benchmarks.")
 {
 	constexpr int min = 6;
-	constexpr int max = 13;
+	constexpr int max = 15;
 
 	constexpr auto profile = []<typename... Args>(auto out, auto fun, Args&&... inputs)
 	{
@@ -59,7 +79,7 @@ TEST_CASE("6 c) plot benchmarks.")
 
 	struct Case
 	{
-		using FunPtr = ColumnVector(*)(const blaze::LowerMatrix<Matrix>&, ColumnVector);
+		using FunPtr = ColumnVector(*)(const Matrix&, ColumnVector);
 		FunPtr fun{};
 		std::string labelText{};
 		std::vector<std::chrono::nanoseconds> timings{};
