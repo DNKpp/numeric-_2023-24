@@ -49,7 +49,7 @@ CPMDeclarePackage(
 CPMDeclarePackage(
 	xsimd
 	NAME xsimd
-	GIT_TAG 11.2.0
+	GIT_TAG 12.1.1
 	GITHUB_REPOSITORY xtensor-stack/xsimd
 	EXCLUDE_FROM_ALL YES
 )
