@@ -1,6 +1,4 @@
-#include <sciplot/sciplot.hpp>
-
-#include "../PlotUtility.hpp"
+#include <matplot/matplot.h>
 
 #include <cmath>
 #include <concepts>
@@ -41,50 +39,28 @@ inline double calc_rel_error(const double x, const double approx)
 
 int main()
 {
-	const auto ps = logspace(10, 0., 12., 11);
+	const auto ps = matplot::logspace(0., 12., 120);
 
-	sciplot::Plot2D positivePlot{};
-	positivePlot.legend()
-				.atOutsideTopLeft()
-				.displayHorizontal();
-	positivePlot.ytics().logscale(10);
-	positivePlot.xtics().logscale(10);
-	positivePlot.ylabel("Error");
-	positivePlot.xlabel("p");
-	positivePlot.drawCurve(
-					ps,
-					array_fun(
-						ps,
-						[](const double p)
-						{
-							return calc_rel_error(nst_stabil(p, 1).second, nst(p, 1).second);
-						}))
-				.label("Error of positive values.");
+	matplot::legend()->location(matplot::legend::general_alignment::topleft);
+	matplot::ylabel("Relative Error");
+	matplot::xlabel("p");
+	matplot::tiledlayout(2, 1);
 
-	sciplot::Plot2D negativePlot{};
-	negativePlot.legend()
-				.atOutsideTopLeft()
-				.displayHorizontal();
-	negativePlot.ytics().logscale(10);
-	negativePlot.xtics().logscale(10);
-	negativePlot.ylabel("Error");
-	negativePlot.xlabel("-p");
-	negativePlot.drawCurve(
-					ps,
-					array_fun(
-						-ps,
-						[](const double p)
-						{
-							return calc_rel_error(nst_stabil(p, 1).first, nst(p, 1).first);
-						}))
-				.label("Error of negative values.");
+	loglog(
+			matplot::nexttile(),
+			ps,
+			matplot::transform(
+				ps,
+				[](const double p) { return calc_rel_error(nst_stabil(p, 1).second, nst(p, 1).second); }))
+		->display_name("Relative error of 10^p.");
 
-	sciplot::Figure figure{
-		{positivePlot},
-		{negativePlot}
-	};
-	figure.palette("dark2");
-	sciplot::Canvas canvas{{figure}};
-	canvas.size(1200, 600);
-	canvas.show();
+	loglog(
+			matplot::nexttile(),
+			ps,
+			matplot::transform(
+				ps,
+				[](const double p) { return calc_rel_error(nst_stabil(-p, 1).first, nst(-p, 1).first); }))
+		->display_name("Relative error of -10^p.");
+
+	matplot::show();
 }
