@@ -1,6 +1,5 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
-#include <sciplot/sciplot.hpp>
 
 #include "compactLR.hpp"
 #include "Rinvb.hpp"
