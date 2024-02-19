@@ -1,5 +1,5 @@
 find_package(blaze REQUIRED)
-CPMGetPackage(sciplot)
+CPMGetPackage(matplotplusplus)
 CPMGetPackage(catch2)
 CPMGetPackage(range-v3)
 
@@ -12,9 +12,9 @@ target_link_libraries(
 	exercise10
 	PRIVATE
 	Catch2::Catch2WithMain
-	sciplot
 	blaze::blaze
 	range-v3::range-v3
+	matplot
 )
 
 target_include_directories(
