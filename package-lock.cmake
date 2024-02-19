@@ -24,9 +24,7 @@ CPMDeclarePackage(
 CPMDeclarePackage(
 	matplotplusplus
 	NAME matplotplusplus
-	# use commit tag, due to pending release fixing a compile error in c++20
-	# see https://github.com/alandefreitas/matplotplusplus/issues/287
-	GIT_TAG 6f8c26beee9a121f92ca6c856acd4520c1efd0e5 #v1.2.0
+	GIT_TAG v1.2.1
 	GITHUB_REPOSITORY alandefreitas/matplotplusplus
 	EXCLUDE_FROM_ALL YES
 )
