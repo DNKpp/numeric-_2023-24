@@ -10,18 +10,6 @@ CPMDeclarePackage(
 )
 
 CPMDeclarePackage(
-	sciplot
-	NAME sciplot
-	GIT_TAG v0.3.1
-	GITHUB_REPOSITORY sciplot/sciplot
-	EXCLUDE_FROM_ALL YES
-	OPTIONS
-		"SCIPLOT_BUILD_EXAMPLES OFF"
-		"SCIPLOT_BUILD_TESTS OFF"
-		"SCIPLOT_BUILD_DOCS OFF"
-)
-
-CPMDeclarePackage(
 	matplotplusplus
 	NAME matplotplusplus
 	GIT_TAG v1.2.1
