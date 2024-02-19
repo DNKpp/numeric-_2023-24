@@ -109,7 +109,7 @@ TEST_CASE("6 c) plot benchmarks.")
 		.displayHorizontal();
 	plot.ytics().logscale(10);
 	plot.xtics().logscale(2);
-	plot.ylabel("duration (in nanoseconds)");
+	plot.ylabel("duration (in seconds)");
 	plot.xlabel("n");
 
 	for (const auto& c : cases)
