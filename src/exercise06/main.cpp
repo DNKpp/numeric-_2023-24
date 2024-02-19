@@ -1,6 +1,9 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
-#include <sciplot/sciplot.hpp>
+#include <matplot/matplot.h>
+#include <range/v3/all.hpp>
+
+#include "../ProfilingUtility.hpp"
 
 #include "Linvb.hpp"
 
@@ -60,30 +63,18 @@ TEST_CASE("6 c) plot benchmarks.")
 	constexpr int min = 6;
 	constexpr int max = 15;
 
-	constexpr auto profile = []<typename... Args>(auto out, auto fun, Args&&... inputs)
-	{
-		constexpr auto clock = std::chrono::steady_clock{};
-		const auto begin = clock.now();
-		auto result = std::invoke(fun, std::forward<Args>(inputs)...);
-		const auto duration = clock.now() - begin;
-		*out = duration;
-		return result;
-	};
-
-	const std::valarray ns = []
-	{
-		std::valarray<double> exponents(max - min + 1);
-		std::iota(begin(exponents), end(exponents), static_cast<double>(min));
-		return pow(2., exponents);
-	}();
+	const std::vector ns = std::views::iota(min, max + 1)
+							| std::views::transform([](const int exp) { return pow(2., exp); })
+							| ranges::to<std::vector>();
 
 	struct Case
 	{
 		using FunPtr = ColumnVector(*)(const Matrix&, ColumnVector);
 		FunPtr fun{};
 		std::string labelText{};
-		std::vector<std::chrono::nanoseconds> timings{};
+		std::vector<RealSeconds> timings{};
 	};
+
 	std::array cases{
 		Case{&linvb, "linvb"},
 		Case{&linvb2, "linvb2"},
@@ -98,37 +89,26 @@ TEST_CASE("6 c) plot benchmarks.")
 
 		for (auto& c : cases)
 		{
-			// prevent the optimizer from optimizing away the call, by using volatile
-			volatile auto result = profile(std::back_inserter(c.timings), c.fun, L, z);
+			c.timings.emplace_back(profile(c.fun, L, z));
 		}
 	}
 
-	sciplot::Plot2D plot{};
-	plot.legend()
-		.atOutsideTopLeft()
-		.displayHorizontal();
-	plot.ytics().logscale(10);
-	plot.xtics().logscale(2);
-	plot.ylabel("duration (in seconds)");
-	plot.xlabel("n");
-
 	for (const auto& c : cases)
 	{
-		sciplot::Vec timings(std::ranges::size(ns));
-		std::ranges::transform(
-			c.timings,
-			std::ranges::begin(timings),
-			[](const auto& duration)
-			{
-				return static_cast<double>(duration.count()) * 1e-9;
-			});
-		plot.drawCurve(ns, timings)
-			.label(c.labelText);
+		matplot::loglog(
+				ns,
+				c.timings
+				| std::views::transform(&RealSeconds::count)
+				| ranges::to<std::vector>(),
+				"-o")
+			->display_name(c.labelText);
+		matplot::hold(true);
 	}
 
-	sciplot::Figure figure{{plot}};
-	figure.palette("dark2");
-	sciplot::Canvas canvas{{figure}};
-	canvas.size(1200, 600);
-	canvas.show();
+	matplot::hold(false);
+
+	matplot::ylabel("duration (in seconds)");
+	matplot::xlabel("n");
+	matplot::legend()->location(matplot::legend::general_alignment::topleft);
+	matplot::show();
 }
