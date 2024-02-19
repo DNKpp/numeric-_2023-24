@@ -1,6 +1,11 @@
 #pragma once
 
+#pragma warning(push)
+#pragma warning(disable:4996)	// 'localtime': This function or variable may be unsafe.
+
 #include <blaze/Blaze.h>
+
+#pragma warning(pop)
 
 #include <ranges>
 
