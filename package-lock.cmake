@@ -10,18 +10,64 @@ CPMDeclarePackage(
 )
 
 CPMDeclarePackage(
+	glad
+	NAME glad
+	GIT_TAG v0.1.36
+	GITHUB_REPOSITORY Dav1dde/glad
+	EXCLUDE_FROM_ALL YES
+)
+
+CPMDeclarePackage(
 	matplotplusplus
 	NAME matplotplusplus
 	GIT_TAG v1.2.1
 	GITHUB_REPOSITORY alandefreitas/matplotplusplus
 	EXCLUDE_FROM_ALL YES
+	OPTIONS
+		"MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND ON"
+		"MATPLOTPP_BUILD_TESTS OFF"
+		"MATPLOTPP_BUILD_EXAMPLES OFF"
 )
 
 CPMDeclarePackage(
 	fmt
 	NAME fmt
-	GIT_TAG 10.1.1
+	GIT_TAG 10.2.1
 	GITHUB_REPOSITORY fmtlib/fmt
+	EXCLUDE_FROM_ALL YES
+)
+#[[
+CPMDeclarePackage(
+	OpenBLAS
+	NAME OpenBLAS
+	GIT_TAG v0.3.26
+	GITHUB_REPOSITORY OpenMathLib/OpenBLAS
+	EXCLUDE_FROM_ALL YES
+)
+#]]
+
+CPMDeclarePackage(
+	OpenBLAS
+	NAME OpenBLAS
+	URL "https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.26/OpenBLAS-0.3.26-x64-64.zip"
+	EXCLUDE_FROM_ALL YES
+)
+
+CPMDeclarePackage(
+	FlexiBLAS
+	NAME FlexiBLAS
+	GIT_TAG v3.4.1
+	GITHUB_REPOSITORY mpimd-csc/flexiblas
+	EXCLUDE_FROM_ALL YES
+	OPTIONS
+		"LAPACK OFF"
+)
+
+CPMDeclarePackage(
+	BLIS
+	NAME BLIS
+	GIT_TAG 0.9.0
+	GITHUB_REPOSITORY flame/blis
 	EXCLUDE_FROM_ALL YES
 )
 
