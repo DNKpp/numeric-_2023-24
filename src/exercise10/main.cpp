@@ -1,5 +1,7 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <fmt/chrono.h>
+#include <fmt/ostream.h>
 #include <matplot/matplot.h>
 
 #include "../ProfilingUtility.hpp"
@@ -116,6 +118,8 @@ TEST_CASE("13 a) plot benchmarks.")
 
 	for (const auto n : ns)
 	{
+		fmt::println("Begin n={}", n);
+
 		const Matrix A = [&]
 		{
 			Matrix M = 2 * blaze::IdentityMatrix<double>{static_cast<std::size_t>(n)};
@@ -127,8 +131,17 @@ TEST_CASE("13 a) plot benchmarks.")
 		for (auto& c : cases)
 		{
 			c.timings.emplace_back(profile(c.fun, A));
+
+			fmt::println("Case {:10} finished after {}.", c.labelText, c.timings.back());
 		}
+
+		fmt::println("End n={}", n);
 	}
+
+	matplot::ylabel("duration (in seconds)");
+	matplot::xlabel("n");
+	matplot::legend()->location(matplot::legend::general_alignment::topleft);
+	matplot::hold(true);
 
 	for (const auto& c : cases)
 	{
@@ -139,13 +152,8 @@ TEST_CASE("13 a) plot benchmarks.")
 				| ranges::to<std::vector>(),
 				"-o")
 			->display_name(c.labelText);
-		matplot::hold(true);
 	}
-
 	matplot::hold(false);
 
-	matplot::ylabel("duration (in seconds)");
-	matplot::xlabel("n");
-	matplot::legend()->location(matplot::legend::general_alignment::topleft);
 	matplot::show();
 }
