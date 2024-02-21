@@ -2,7 +2,7 @@
 
 #include "Definitions.hpp"
 
-#include <concepts>
+#include <type_traits>
 
 template <typename Fn>
 	requires std::is_invocable_r_v<double, Fn, double>
