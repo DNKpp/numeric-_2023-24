@@ -41,7 +41,7 @@ namespace
 			bisectionResults | ranges::views::drop(1) | ranges::to<std::vector>(),
 			[](const double lhs, const double rhs) { return blaze::abs(lhs - rhs); });
 		matplot::semilogy(
-				matplot::linspace(2., static_cast<double>(std::ranges::ssize(lengths) + 1), std::ranges::ssize(lengths)),
+				matplot::linspace(1., static_cast<double>(std::ranges::ssize(lengths)), std::ranges::ssize(lengths)),
 				lengths)
 			->display_name("Bisektion Intervall Länge");
 	}
@@ -70,14 +70,17 @@ TEST_CASE("32 b) plot f(x) = x^2 - cos(x) in [0, 3]")
 		Case{"sekanten", sekanten(f, lower, upper, tol, maxIt)}
 	};
 
-	matplot::ylabel("relative error");
+	matplot::ylabel("error |x_k - x^*|");
 	matplot::xlabel("i");
 	matplot::legend()->location(matplot::legend::general_alignment::bottomleft);
 	matplot::hold(true);
 
 	for (const auto& c : cases)
 	{
-		matplot::semilogy(matplot::transform(c.xk, error))
+		const auto xkLength = std::ranges::ssize(c.xk);
+		matplot::semilogy(
+				matplot::linspace(0., static_cast<double>(xkLength - 1), xkLength),
+				matplot::transform(c.xk, error))
 			->display_name(c.labelText);
 	}
 
